@@ -289,14 +289,16 @@ document.addEventListener('DOMContentLoaded', function() {
       document.queryselectorall('.content-blocked')
         .foreach(x => x.classlist.remove('content-blocked'))
     `;
-  
+
   else if(/correio24horas\.com\.br/.test(document.location.host))
     // remover tudo relacionado ao paywall e remover limite de altura no div do conteúdo da matéria
+    // verificar se a altura não buga com a mudança de largura da página (layout responsivo, né)
     code=`
       jQuery('[class^=paywall]').remove();
       jQuery('[class$=blocked]').removeClass();
       jQuery('[id^=paywall]').removeClass('hide').removeClass('is-active');
-      jQuery('.noticias-single__content__text').attr('style', '')
+      jQuery('.noticias-single__content__text').attr('style', 'height:auto;');
+      jQuery('[id^=paywall]').remove();
     `;
 
   else if (/nytimes\.com/.test(document.location.host))
