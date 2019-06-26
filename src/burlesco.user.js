@@ -57,6 +57,10 @@
 // @match        *://*.haaretz.co.il/*
 // @match        *://*.diarinho.com.br/*
 // @match        *://*.diariodaregiao.com.br/*
+// @match        *://*.correio24horas.com.br/*
+// @webRequestItem {"selector":"*://correio-static.cworks.cloud/vendor/bower_components/paywall.js/paywall.js*","action":"cancel"}
+// @webRequestItem {"selector":"*://collector.mediator.media/script/*","action":"cancel"}
+// @webRequestItem {"selector":"*://c24h.lvsn.se/*","action":"cancel"}
 // @webRequestItem {"selector":{"include":"*://paywall.folha.uol.com.br/*","exclude":"*://paywall.folha.uol.com.br/status.php"} ,"action":"cancel"}
 // @webRequestItem {"selector":"*://static.folha.uol.com.br/paywall/*","action":"cancel"}
 // @webRequestItem {"selector":"*://ogjs.infoglobo.com.br/*/js/controla-acesso-aux.js","action":"cancel"}
@@ -284,6 +288,15 @@ document.addEventListener('DOMContentLoaded', function() {
         .foreach(x => x.remove());
       document.queryselectorall('.content-blocked')
         .foreach(x => x.classlist.remove('content-blocked'))
+    `;
+  
+  else if(/correio24horas\.com\.br/.test(document.location.host))
+    // remover tudo relacionado ao paywall e remover limite de altura no div do conteúdo da matéria
+    code=`
+      jQuery('[class^=paywall]').remove();
+      jQuery('[class$=blocked]').removeClass();
+      jQuery('[id^=paywall]').removeClass('hide').removeClass('is-active');
+      jQuery('.noticias-single__content__text').attr('style', '')
     `;
 
   else if (/nytimes\.com/.test(document.location.host))
