@@ -57,6 +57,7 @@
 // @match        *://*.haaretz.co.il/*
 // @match        *://*.diarinho.com.br/*
 // @match        *://*.diariodaregiao.com.br/*
+// @match        *://*.dgabc.com.br/*
 // @webRequestItem {"selector":{"include":"*://paywall.folha.uol.com.br/*","exclude":"*://paywall.folha.uol.com.br/status.php"} ,"action":"cancel"}
 // @webRequestItem {"selector":"*://static.folha.uol.com.br/paywall/*","action":"cancel"}
 // @webRequestItem {"selector":"*://ogjs.infoglobo.com.br/*/js/controla-acesso-aux.js","action":"cancel"}
@@ -366,6 +367,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       }
     });
+  }
+
+  else if (/dgabc\.com\.br/.test(document.location.host)) {
+    code = `
+      var email = 'colaborador@dgabc.com.br';
+      var senha = '';
+      localStorage.emailNoticiaExclusiva = email;
+      $('.NoticiaExclusivaNaoLogado').hide();
+      $('.NoticiaExclusivaLogadoSemPermissao').hide();
+      $('.linhaSuperBanner').show();
+      $('.footer').show();
+      $('.NoticiaExclusivaLogado').show();
+    `;
   }
 
   if (code !== null) {
