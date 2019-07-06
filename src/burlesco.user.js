@@ -21,6 +21,7 @@
 // @match        *://blockv2.fivewall.com.br/*
 // @match        *://*.folha.uol.com.br/*
 // @match        *://*.folha.com.br/*
+// @match        *://*folha.uol.com.br/*
 // @match        *://gauchazh.clicrbs.com.br/*
 // @match        *://*.zh.clicrbs.com.br/*
 // @match        *://api.clicrbs.com.br/*
@@ -60,6 +61,9 @@
 // @match        *://*.correio24horas.com.br/*
 // @webRequestItem {"selector":"*://correio-static.cworks.cloud/vendor/bower_components/paywall.js/paywall.js*","action":"cancel"}
 // @webRequestItem {"selector":{"include":"*://paywall.folha.uol.com.br/*","exclude":"*://paywall.folha.uol.com.br/status.php"} ,"action":"cancel"}
+// @webRequestItem {"selector":"*://paywall.folha.uol.com.br/wall.json*","action":"cancel"}
+// @webRequestItem {"selector":"*://news.google.com/*","action":"cancel"}
+// @webRequestItem {"selector":"*://pay.google.com/*","action":"cancel"}
 // @webRequestItem {"selector":"*://static.folha.uol.com.br/paywall/*","action":"cancel"}
 // @webRequestItem {"selector":"*://ogjs.infoglobo.com.br/*/js/controla-acesso-aux.js","action":"cancel"}
 // @webRequestItem {"selector":"*://static.infoglobo.com.br/paywall/register-piano/*/scripts/nova-tela-register.js","action":"cancel"}
@@ -199,6 +203,20 @@ else if (/jota\.info/.test(document.location.host)) {
   }
 }
 
+else if (/folha\.uol\.com\.br/.test(document.location.host)) {
+  // creio que cancelar os GETs do paywall da folha e coisas relacionadas
+  //ao SWG do Google Notícias foi "overkill"/"bater em cachorro morto"
+
+  // console.log('content_start na *folha.uol.com.br - eu vou matar o paywall');
+  document.addEventListener('DOMContentLoaded', function() {
+    jQuery('.c-news').removeAttr('data-paywall-box');
+    // isso engatilha uma função de fallback que cobre o main div completamente
+    jQuery('.c-news').append('<div style="display:none;" id="memes" data-paywall-box=""></div>');
+    // e criamos um div vazio para o paywall ficar dentro !
+      
+  });
+}
+
 
 // run_at: document_idle
 document.addEventListener('DOMContentLoaded', function() {
@@ -333,11 +351,11 @@ document.addEventListener('DOMContentLoaded', function() {
     sessionStorage.clear();
   }
 
-  else if (/diariodaregiao\.com\.br/.test(document.location.host)) 
+  else if (/diariodaregiao\.com\.br/.test(document.location.host))
   {
     document.getElementsByClassName('noticia-texto')[0].style.display = 'block';
     document.querySelector('.conteudo > .row').style.display = 'none';
-  }  
+  }
 
   else if (/diariopopular\.com\.br/.test(document.location.host)) {
     eraseAllCookies();
