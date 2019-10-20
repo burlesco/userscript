@@ -59,6 +59,7 @@
 // @match        *://*.diariodaregiao.com.br/*
 // @match        *://*.correio24horas.com.br/*
 // @match        *://*.dgabc.com.br/*
+// @match        *://crusoe.com.br/*
 // @webRequestItem {"selector":"*://correio-static.cworks.cloud/vendor/bower_components/paywall.js/paywall.js*","action":"cancel"}
 // @webRequestItem {"selector":{"include":"*://paywall.folha.uol.com.br/*","exclude":"*://paywall.folha.uol.com.br/status.php"} ,"action":"cancel"}
 // @webRequestItem {"selector":"*://static.folha.uol.com.br/paywall/*","action":"cancel"}
@@ -200,6 +201,9 @@ else if (/jota\.info/.test(document.location.host)) {
   }
 }
 
+else if (/valor\.globo\.com/.test(document.location.host)) {
+  document.cookie = 'crs_subscriber=1';
+}
 
 // run_at: document_idle
 document.addEventListener('DOMContentLoaded', function() {
