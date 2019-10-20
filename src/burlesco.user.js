@@ -60,6 +60,7 @@
 // @match        *://*.correio24horas.com.br/*
 // @match        *://*.dgabc.com.br/*
 // @match        *://crusoe.com.br/*
+// @match        *://*.em.com.br/*
 // @webRequestItem {"selector":"*://correio-static.cworks.cloud/vendor/bower_components/paywall.js/paywall.js*","action":"cancel"}
 // @webRequestItem {"selector":{"include":"*://paywall.folha.uol.com.br/*","exclude":"*://paywall.folha.uol.com.br/status.php"} ,"action":"cancel"}
 // @webRequestItem {"selector":"*://static.folha.uol.com.br/paywall/*","action":"cancel"}
@@ -385,7 +386,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   }
-
+  
   else if (/dgabc\.com\.br/.test(document.location.host)) {
     code = `
       var email = 'colaborador@dgabc.com.br';
@@ -397,6 +398,11 @@ document.addEventListener('DOMContentLoaded', function() {
       $('.footer').show();
       $('.NoticiaExclusivaLogado').show();
     `;
+  }
+  
+  else if (/em\.com\.br/.test(document.location.host)) {
+    document.querySelectorAll('.news-blocked').forEach( el => el.remove());
+    document.body.className = document.body.className.replace('news-blocked-no-scroll', '');
   }
 
   if (code !== null) {
