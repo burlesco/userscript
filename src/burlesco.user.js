@@ -58,6 +58,7 @@
 // @match        *://*.diarinho.com.br/*
 // @match        *://*.diariodaregiao.com.br/*
 // @match        *://*.correio24horas.com.br/*
+// @match        *://*.dgabc.com.br/*
 // @match        *://crusoe.com.br/*
 // @webRequestItem {"selector":"*://correio-static.cworks.cloud/vendor/bower_components/paywall.js/paywall.js*","action":"cancel"}
 // @webRequestItem {"selector":{"include":"*://paywall.folha.uol.com.br/*","exclude":"*://paywall.folha.uol.com.br/status.php"} ,"action":"cancel"}
@@ -383,6 +384,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       }
     });
+  }
+
+  else if (/dgabc\.com\.br/.test(document.location.host)) {
+    code = `
+      var email = 'colaborador@dgabc.com.br';
+      var senha = '';
+      localStorage.emailNoticiaExclusiva = email;
+      $('.NoticiaExclusivaNaoLogado').hide();
+      $('.NoticiaExclusivaLogadoSemPermissao').hide();
+      $('.linhaSuperBanner').show();
+      $('.footer').show();
+      $('.NoticiaExclusivaLogado').show();
+    `;
   }
 
   if (code !== null) {
