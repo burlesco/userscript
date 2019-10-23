@@ -202,7 +202,7 @@ else if (/jota\.info/.test(document.location.host)) {
   }
 }
 
-else if (/valor\.globo\.com/.test(document.location.host)) {
+else if (/crusoe\.com\.br/.test(document.location.host)) {
   document.cookie = 'crs_subscriber=1';
 }
 
