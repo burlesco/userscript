@@ -18,7 +18,7 @@
 // @match        *://www.economist.com/*
 // @match        *://*.estadao.com.br/*
 // @match        *://foreignpolicy.com/*
-// @match        *://blockv2.fivewall.com.br/*
+// @match        *://*.fivewall.com.br/*
 // @match        *://*.folha.uol.com.br/*
 // @match        *://*.folha.com.br/*
 // @match        *://gauchazh.clicrbs.com.br/*
@@ -69,8 +69,7 @@
 // @webRequestItem {"selector":"*://www.netdeal.com.br/*","action":"cancel"}
 // @webRequestItem {"selector":"*://correio.rac.com.br/includes/js/novo_cp/fivewall.js*","action":"cancel"}
 // @webRequestItem {"selector":"*://dashboard.tinypass.com/xbuilder/experience/load*","action":"cancel"}
-// @webRequestItem {"selector":"*://*.jornalnh.com.br/includes/js/paywall.js*","action":"cancel"}
-// @webRequestItem {"selector":"*://blockv2.fivewall.com.br/*","action":"cancel"}
+// @webRequestItem {"selector":"*://*.fivewall.com.br/*","action":"cancel"}
 // @webRequestItem {"selector":"*://www.rbsonline.com.br/cdn/scripts/SLoader.js","action":"cancel"}
 // @webRequestItem {"selector":"*://*.nytimes.com/js/mtr.js","action":"cancel"}
 // @webRequestItem {"selector":"*://*.washingtonpost.com/wp-stat/pwapi/*","action":"cancel"}
