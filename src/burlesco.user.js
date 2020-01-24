@@ -82,7 +82,7 @@
 // @webRequestItem {"selector":"*://www.rbsonline.com.br/cdn/scripts/special-paywall.min.js*","action":"cancel"}
 // @webRequestItem {"selector":"https://paywall.nsctotal.com.br/behaviors","action":"cancel"}
 // @webRequestItem {"selector":"*://*.estadao.com.br/paywall/*","action":"cancel"}
-// @webRequestItem {"selector":"*://www.folhadelondrina.com.br/*/fivewall.js*","action":"cancel"}
+// @webRequestItem {"selector":"*://www.folhadelondrina.com.br/login.php*","action":"cancel"}
 // @webRequestItem {"selector":"https://www.eltiempo.com/js/desktopArticle.js*","action":"cancel"}
 // @webRequestItem {"selector":"*://*.haaretz.co.il/*/inter.js","action":"cancel"}
 // @webRequestItem {"selector":"*://*.themarker.com/*/inter.js","action":"cancel"}
