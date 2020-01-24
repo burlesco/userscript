@@ -88,6 +88,7 @@
 // @webRequestItem {"selector":"*://*.themarker.com/*/inter.js","action":"cancel"}
 // @webRequestItem {"selector":"*://*.diarinho.com.br/wp-admin/admin-ajax.php","action":"cancel"}
 // @webRequestItem {"selector":"*://diarinho.com.br/wp-admin/admin-ajax.php","action":"cancel"}
+// @webRequestItem {"selector":"*://static.infoglobo.com.br/paywall/js/tiny.js","action":"cancel"}
 // @run-at       document-start
 // @noframes
 // ==/UserScript==
@@ -132,49 +133,6 @@ if (/gauchazh\.clicrbs\.com\.br/.test(document.location.host)) {
   };
 }
 
-else if (/oglobo\.globo\.com/.test(document.location.host)) {
-
-  // Insere Tinypass, necessário para a biblioteca piano
-
-  GM_xmlhttpRequest({
-    method: 'GET',
-    url: 'https://cdn.tinypass.com/api/tinypass.min.js',
-    anonymous: true,
-    onload: function(response) {
-      var script = document.createElement('script');
-      script.type = 'text/javascript';
-      var textNode = document.createTextNode(response.responseText);
-      script.appendChild(textNode);
-      document.head.appendChild(script);
-    }
-  });
-
-  document.addEventListener('DOMContentLoaded', function() {
-    function patchJs(jsurl) {
-      GM_xmlhttpRequest({
-        method: 'GET',
-        url: jsurl,
-        onload: function(response) {
-          var injectme = response.responseText;
-          injectme = injectme.replace('window.hasPaywall||!1;window.dataLayer=window.dataLayer||[]', 'false');
-          injectme = injectme.replace('window.conteudoExclusivo?!0:!1', 'false');
-          injectme = injectme.replace('Piano.activePaywall=!0', 'Piano.activePaywall=false');
-          injectme = injectme.replace('Piano.checkPaywall()', '');
-          var script = document.createElement('script');
-          script.type = 'text/javascript';
-          var textNode = document.createTextNode(injectme);
-          script.appendChild(textNode);
-          document.head.appendChild(script);
-        }
-      });
-    }
-
-    var scripts = Array.from(document.getElementsByTagName('script'));
-    var script = scripts.find((el) => { return el.src.includes('js/tiny.js'); });
-    if (script)
-      patchJs(script.src);
-  });
-}
 
 else if (/jota\.info/.test(document.location.host)) {
   var page_url = window.location.href;
