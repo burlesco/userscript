@@ -361,8 +361,28 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   else if (/em\.com\.br/.test(document.location.host)) {
-    document.querySelectorAll('.news-blocked').forEach( el => el.remove());
-    document.body.className = document.body.className.replace('news-blocked-no-scroll', '');
+    window.id_acesso_noticia = 0;
+      
+    let style = document.createElement('style');
+    style.type = 'text/css';
+
+    let css=`
+      .news-blocked {
+        display: none !important
+      }
+      .news-blocked-no-scroll {
+        overflow: auto !important;
+        width: auto !important;
+        position: unset !important;
+      }
+      
+      div[itemprop="articleBody"] {
+        height: auto !important;
+      }
+    `;
+
+    style.appendChild(document.createTextNode(css));
+    document.head.appendChild(style);
   }
 
   else if (/newsweek\.pl|forbes\.pl/.test(document.location.host)) {
