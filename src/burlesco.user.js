@@ -386,9 +386,9 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   else if (/newsweek\.pl|forbes\.pl/.test(document.location.host)) {
-    let contentPremium = document.querySelector(".contentPremium");
+    let contentPremium = document.querySelector('.contentPremium');
     if (contentPremium) {
-        contentPremium.classList.remove("contentPremium");
+      contentPremium.classList.remove('contentPremium');
     }
   }
 
