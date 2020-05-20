@@ -5,7 +5,7 @@
 // @description  Leia notícias sem ser assinante, burle o paywall
 // @author       rodorgas & AugustoResende
 // @supportURL   https://burles.co
-// @icon64       https://burles.co/userscript/icon.png
+// @icon         https://raw.githubusercontent.com/burlesco/site/master/logo_semfundo.png
 // Atenção:      Caso algum site não funcione logo após a instalação, limpe o cache do navegador.
 // @grant        GM_webRequest
 // @grant        GM_xmlhttpRequest
