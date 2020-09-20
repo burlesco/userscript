@@ -37,7 +37,7 @@
 // @match        *://cdn.tinypass.com/*
 // @match        *://dashboard.tinypass.com/*
 // @match        *://*.washingtonpost.com/*
-// @match        *://*.exame.abril.com.br/*
+// @match        *://*.exame.com/*
 // @match        *://www.eltiempo.com/*
 // @match        *://super.abril.com.br/*
 // @match        *://veja.abril.com.br/*
@@ -88,6 +88,8 @@
 // @webRequestItem {"selector":"*://*.diarinho.com.br/wp-admin/admin-ajax.php","action":"cancel"}
 // @webRequestItem {"selector":"*://diarinho.com.br/wp-admin/admin-ajax.php","action":"cancel"}
 // @webRequestItem {"selector":"*://static.infoglobo.com.br/paywall/js/tiny.js","action":"cancel"}
+// @webRequestItem {"selector":"*://*.abril.com.br/wp-content/plugins/abril-plugins/abril-paywall/js/paywall.js*","action":"cancel"}
+// @webRequestItem {"selector":"*://exame.com/wp-content/themes/exame-new/js/pywll.js","action":"cancel"}
 // @run-at       document-start
 // @noframes
 // ==/UserScript==
@@ -222,11 +224,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
   else if (/abril\.com\.br/.test(document.location.host))
     code = `
-      document.queryselectorall('.callpaywall')
-        .foreach(x => x.remove());
-      document.queryselectorall('.content-blocked')
-        .foreach(x => x.classlist.remove('content-blocked'))
+      window.setTimeout(function() {
+        document.querySelector('body').classList.remove('disabledByPaywall')
+        document.querySelector('.piano-offer-overlay').remove()
+        document.querySelector('#piano_offer').remove()
+      }, 10000)
     `;
+
 
   else if(/correio24horas\.com\.br/.test(document.location.host))
     // remover tudo relacionado ao paywall e remover limite de altura no div do conteúdo da matéria
