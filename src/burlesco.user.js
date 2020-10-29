@@ -62,6 +62,7 @@
 // @match        *://*.em.com.br/*
 // @match        *://*.forbes.pl/*
 // @match        *://*.newsweek.pl/*
+// @match        *://*.seudinheiro.com/*
 // @webRequestItem {"selector":"*://correio-static.cworks.cloud/vendor/bower_components/paywall.js/paywall.js*","action":"cancel"}
 // @webRequestItem {"selector":{"include":"*://paywall.folha.uol.com.br/*","exclude":"*://paywall.folha.uol.com.br/status.php"} ,"action":"cancel"}
 // @webRequestItem {"selector":"*://static.folha.uol.com.br/paywall/*","action":"cancel"}
@@ -279,11 +280,11 @@ document.addEventListener('DOMContentLoaded', function() {
     sessionStorage.clear();
   }
 
-  else if (/diariodaregiao\.com\.br/.test(document.location.host)) 
+  else if (/diariodaregiao\.com\.br/.test(document.location.host))
   {
     document.getElementsByClassName('noticia-texto')[0].style.display = 'block';
     document.querySelector('.conteudo > .row').style.display = 'none';
-  }  
+  }
 
   else if (/diariopopular\.com\.br/.test(document.location.host)) {
     eraseAllCookies();
@@ -326,7 +327,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   }
-  
+
   else if (/dgabc\.com\.br/.test(document.location.host)) {
     code = `
       var email = 'colaborador@dgabc.com.br';
@@ -339,10 +340,10 @@ document.addEventListener('DOMContentLoaded', function() {
       $('.NoticiaExclusivaLogado').show();
     `;
   }
-  
+
   else if (/em\.com\.br/.test(document.location.host)) {
     window.id_acesso_noticia = 0;
-      
+
     let style = document.createElement('style');
     style.type = 'text/css';
 
@@ -370,6 +371,11 @@ document.addEventListener('DOMContentLoaded', function() {
     if (contentPremium) {
       contentPremium.classList.remove('contentPremium');
     }
+  }
+
+  else if (/seudinheiro\.com/.test(document.location.host)) {
+    document.querySelector('#premium-paywall').remove()
+    document.body.style.overflow = ''
   }
 
   if (code !== null) {
