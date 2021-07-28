@@ -32,6 +32,8 @@
 // @match        *://*.nytimes.com/*
 // @match        *://*.nyt.com/*
 // @match        *://*.oglobo.globo.com/*
+// @match        *://*.epoca.globo.com/*
+// @match        *://*.epocanegocios.globo.com/*
 // @match        *://www.rbsonline.com.br/*
 // @match        *://api.tinypass.com/*
 // @match        *://cdn.tinypass.com/*
@@ -64,6 +66,8 @@
 // @match        *://*.newsweek.pl/*
 // @match        *://*.seudinheiro.com/*
 // @match        *://*.diariodecanoas.com.br/*
+// @match        *://*.superlutas.com.br/*
+// @match        *://*.agazeta.com.br/*
 // @webRequestItem {"selector":"*://correio-static.cworks.cloud/vendor/bower_components/paywall.js/paywall.js*","action":"cancel"}
 // @webRequestItem {"selector":{"include":"*://paywall.folha.uol.com.br/*","exclude":"*://paywall.folha.uol.com.br/status.php"} ,"action":"cancel"}
 // @webRequestItem {"selector":"*://static.folha.uol.com.br/paywall/*","action":"cancel"}
@@ -246,6 +250,38 @@ document.addEventListener('DOMContentLoaded', function() {
       setInterval(function() { jQuery('[itemprop^=articleBody]').css('height', '100%'); console.log('Burlesco: forçando altura...'); }, 1000);
 
     `;
+  
+  else if (/superlutas\.com\.br/.test(document.location.host)) {
+    code = `
+      window.onload = function() {
+        style = document.createElement('style');
+        style.type = 'text/css';
+        css='.swal2-container {display: none !important}';
+        style.appendChild(document.createTextNode(css));
+        document.head.appendChild(style);
+      }
+      document.cookie = "";
+      localStorage.clear();
+      sessionStorage.clear();
+    `;
+    eraseAllCookies();
+  }
+  
+  else if (/agazeta\.com\.br/.test(document.location.host)) {
+    code = `
+      window.onload = function() {
+        style = document.createElement('style');
+        style.type = 'text/css';
+        css='.fc-ab-root {display: none !important}';
+        style.appendChild(document.createTextNode(css));
+        document.head.appendChild(style);
+      }
+      document.cookie = "";
+      localStorage.clear();
+      sessionStorage.clear();
+    `;
+    eraseAllCookies();
+  }
 
   else if (/nytimes\.com/.test(document.location.host))
     eraseAllCookies();
