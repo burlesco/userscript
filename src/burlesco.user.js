@@ -12,6 +12,7 @@
 // @connect      gauchazh.clicrbs.com.br
 // @connect      static.infoglobo.com.br
 // @connect      cdn.tinypass.com
+// @connect      observador.pt
 // @match        *://www.bloomberg.com/*
 // @match        *://correio.rac.com.br/*
 // @match        *://*.nsctotal.com.br/*
@@ -64,6 +65,7 @@
 // @match        *://*.newsweek.pl/*
 // @match        *://*.seudinheiro.com/*
 // @match        *://*.diariodecanoas.com.br/*
+// @match        *://*.observador.pt/*
 // @webRequestItem {"selector":"*://correio-static.cworks.cloud/vendor/bower_components/paywall.js/paywall.js*","action":"cancel"}
 // @webRequestItem {"selector":{"include":"*://paywall.folha.uol.com.br/*","exclude":"*://paywall.folha.uol.com.br/status.php"} ,"action":"cancel"}
 // @webRequestItem {"selector":"*://static.folha.uol.com.br/paywall/*","action":"cancel"}
@@ -77,7 +79,7 @@
 // @webRequestItem {"selector":"*://*.nytimes.com/js/mtr.js","action":"cancel"}
 // @webRequestItem {"selector":"*://*.washingtonpost.com/wp-stat/pwapi/*","action":"cancel"}
 // @webRequestItem {"selector":"*://cdn.tinypass.com/api/tinypass.min.js","action":"cancel"}
-// @webRequestItem {"selector":"*://api.tinypass.com/tpl/*","action":"cancel"}
+// @webRequestItem {"selector":"*://api.tinypass.com/*","action":"cancel"}
 // @webRequestItem {"selector":"*://tm.jsuol.com.br/modules/content-gate.js","action":"cancel"}
 // @webRequestItem {"selector":"*://gauchazh.clicrbs.com.br/static/main*","action":"cancel"}
 // @webRequestItem {"selector":"*://www.rbsonline.com.br/cdn/scripts/special-paywall.min.js*","action":"cancel"}
@@ -379,6 +381,14 @@ document.addEventListener('DOMContentLoaded', function() {
   else if (/seudinheiro\.com/.test(document.location.host)) {
     document.querySelector('#premium-paywall').remove()
     document.body.style.overflow = ''
+  }
+
+  else if (/observador\.pt/.test(document.location.host)) {
+    setInterval(() => {
+      document.querySelector('.piano-article-blocker').remove();
+      document.querySelector('.article-body-wrapper').style.maxHeight = 'inherit';
+      document.querySelector('.premium-article').classList.add('article-shown');
+    })
   }
 
   if (code !== null) {
