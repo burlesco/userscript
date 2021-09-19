@@ -180,8 +180,8 @@ document.addEventListener('DOMContentLoaded', function() {
   var code = null;
 
   if (/www\.economist\.com/.test(document.location.host)) {
-      code = 'document.cookie = "ec_limit=allow";';
-      code = `
+    code = 'document.cookie = "ec_limit=allow";';
+    code = `
         var artBodyContainer = document.querySelector("article.article");
         var artBody = artBodyContainer.innerHTML;
         checkPaywall();
@@ -194,7 +194,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         };
       `;
-    }
+  }
 
   else if (/ft\.com/.test(document.location.host)
       && document.querySelector('.barrier-banner')) {
