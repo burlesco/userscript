@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Burlesco
 // @namespace    https://burles.co/
-// @version      11.20
+// @version      12.0
 // @description  Leia notícias sem ser assinante, burle o paywall
 // @author       rodorgas & AugustoResende
 // @supportURL   https://burles.co
@@ -192,7 +192,7 @@ document.addEventListener('DOMContentLoaded', function() {
     sessionStorage.clear();
     indexedDB.deleteDatabase('next-flags');
     indexedDB.deleteDatabase('next:ads');
-    
+
     document.querySelector('.o-cookie-message').remove();
 
     GM_xmlhttpRequest({
@@ -366,7 +366,7 @@ document.addEventListener('DOMContentLoaded', function() {
         width: auto !important;
         position: unset !important;
       }
-      
+
       div[itemprop="articleBody"] {
         height: auto !important;
       }
@@ -384,8 +384,8 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   else if (/seudinheiro\.com/.test(document.location.host)) {
-    document.querySelector('#premium-paywall').remove()
-    document.body.style.overflow = ''
+    document.querySelector('#premium-paywall').remove();
+    document.body.style.overflow = '';
   }
 
   else if (/observador\.pt/.test(document.location.host)) {
