@@ -176,7 +176,7 @@ document.addEventListener('DOMContentLoaded', function() {
     code = 'document.cookie = "ec_limit=allow";';
 
   else if (/ft\.com/.test(document.location.host)
-      && document.querySelector('.barrier')) {
+      && document.querySelector('.barrier-banner')) {
 
     eraseAllCookies();
 
@@ -185,6 +185,8 @@ document.addEventListener('DOMContentLoaded', function() {
     sessionStorage.clear();
     indexedDB.deleteDatabase('next-flags');
     indexedDB.deleteDatabase('next:ads');
+    
+    document.querySelector('.o-cookie-message').remove();
 
     GM_xmlhttpRequest({
       method: 'GET',
