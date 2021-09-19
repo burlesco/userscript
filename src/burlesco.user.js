@@ -13,6 +13,7 @@
 // @connect      static.infoglobo.com.br
 // @connect      cdn.tinypass.com
 // @connect      observador.pt
+// @connect      brasil.elpais.com
 // @match        *://www.bloomberg.com/*
 // @match        *://correio.rac.com.br/*
 // @match        *://*.nsctotal.com.br/*
@@ -66,6 +67,7 @@
 // @match        *://*.seudinheiro.com/*
 // @match        *://*.diariodecanoas.com.br/*
 // @match        *://*.observador.pt/*
+// @match        *://*.elpais.com/*
 // @webRequestItem {"selector":"*://correio-static.cworks.cloud/vendor/bower_components/paywall.js/paywall.js*","action":"cancel"}
 // @webRequestItem {"selector":{"include":"*://paywall.folha.uol.com.br/*","exclude":"*://paywall.folha.uol.com.br/status.php"} ,"action":"cancel"}
 // @webRequestItem {"selector":"*://static.folha.uol.com.br/paywall/*","action":"cancel"}
@@ -94,6 +96,9 @@
 // @webRequestItem {"selector":"*://static.infoglobo.com.br/paywall/js/tiny.js","action":"cancel"}
 // @webRequestItem {"selector":"*://*.abril.com.br/wp-content/plugins/abril-plugins/abril-paywall/js/paywall.js*","action":"cancel"}
 // @webRequestItem {"selector":"*://exame.com/wp-content/themes/exame-new/js/pywll.js","action":"cancel"}
+// @webRequestItem {"selector":"*://prisa-el-pais-brasil-prod.cdn.arcpublishing.com/arc/subs/p.js","action":"cancel"}
+// @webRequestItem {"selector":"*://prisa-el-pais-prod.cdn.arcpublishing.com/arc/subs/p.js","action":"cancel"}
+// @webRequestItem {"selector":"*://brasil.elpais.com/pf/resources/dist/js/article.js*","action":"cancel"}
 // @run-at       document-start
 // @noframes
 // ==/UserScript==
@@ -388,7 +393,7 @@ document.addEventListener('DOMContentLoaded', function() {
       document.querySelector('.piano-article-blocker').remove();
       document.querySelector('.article-body-wrapper').style.maxHeight = 'inherit';
       document.querySelector('.premium-article').classList.add('article-shown');
-    })
+    }, 5000);
   }
 
   if (code !== null) {
