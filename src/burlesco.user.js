@@ -9,7 +9,6 @@
 // Atenção:      Caso algum site não funcione logo após a instalação, limpe o cache do navegador.
 // @grant        GM_webRequest
 // @grant        GM_xmlhttpRequest
-// @connect      gauchazh.clicrbs.com.br
 // @connect      static.infoglobo.com.br
 // @connect      cdn.tinypass.com
 // @connect      observador.pt
@@ -34,7 +33,6 @@
 // @match        *://*.nytimes.com/*
 // @match        *://*.nyt.com/*
 // @match        *://*.oglobo.globo.com/*
-// @match        *://www.rbsonline.com.br/*
 // @match        *://api.tinypass.com/*
 // @match        *://cdn.tinypass.com/*
 // @match        *://dashboard.tinypass.com/*
@@ -77,14 +75,11 @@
 // @webRequestItem {"selector":"*://correio.rac.com.br/includes/js/novo_cp/fivewall.js*","action":"cancel"}
 // @webRequestItem {"selector":"*://dashboard.tinypass.com/xbuilder/experience/load*","action":"cancel"}
 // @webRequestItem {"selector":"*://*.fivewall.com.br/*","action":"cancel"}
-// @webRequestItem {"selector":"*://www.rbsonline.com.br/cdn/scripts/SLoader.js","action":"cancel"}
 // @webRequestItem {"selector":"*://*.nytimes.com/js/mtr.js","action":"cancel"}
 // @webRequestItem {"selector":"*://*.washingtonpost.com/wp-stat/pwapi/*","action":"cancel"}
 // @webRequestItem {"selector":"*://cdn.tinypass.com/api/tinypass.min.js","action":"cancel"}
 // @webRequestItem {"selector":"*://api.tinypass.com/*","action":"cancel"}
 // @webRequestItem {"selector":"*://tm.jsuol.com.br/modules/content-gate.js","action":"cancel"}
-// @webRequestItem {"selector":"*://gauchazh.clicrbs.com.br/static/main*","action":"cancel"}
-// @webRequestItem {"selector":"*://www.rbsonline.com.br/cdn/scripts/special-paywall.min.js*","action":"cancel"}
 // @webRequestItem {"selector":"https://paywall.nsctotal.com.br/behaviors","action":"cancel"}
 // @webRequestItem {"selector":"*://*.estadao.com.br/paywall/*","action":"cancel"}
 // @webRequestItem {"selector":"*://www.folhadelondrina.com.br/login.php*","action":"cancel"}
@@ -105,38 +100,24 @@
 
 // run_at: document_start
 if (/gauchazh\.clicrbs\.com\.br/.test(document.location.host)) {
-  document.addEventListener('DOMContentLoaded', function() {
-    function patchJs(jsurl) {
-      GM_xmlhttpRequest({
-        method: 'GET',
-        url: jsurl,
-        onload: function(response) {
-          var injectme = response.responseText;
-          injectme = injectme.replace(/[a-z].showLoginPaywall,/g, 'false,');
-          injectme = injectme.replace(/[a-z].showPaywall,/g, 'false,');
-          injectme = injectme.replace(/[a-z].requestCPF\|\|!1,/g, 'false,');
-          injectme = injectme.replace(
-            /![a-z].showLoginPaywall&&![a-z].showPaywall\|\|!1/g, 'true');
-          injectme = injectme.replace('throw new Error("only one instance of babel-polyfill is allowed");', '');
-          var script = document.createElement('script');
-          script.type = 'text/javascript';
-          var textNode = document.createTextNode(injectme);
-          script.appendChild(textNode);
-          document.head.appendChild(script);
-        }
-      });
-    }
+  const cleanPaywallTracking = () => {
+    document.cookie = 'pwsi__zh=;domain=.clicrbs.com.br;path=/;expires=Thu, 01 Jan 1970 00:00:01 GMT';
+    localStorage.removeItem('pwsi__zh');
+    sessionStorage.removeItem('pwsi__zh');
+  }
 
-    var scripts = Array.from(document.getElementsByTagName('script'));
-    var script = scripts.find((el) => { return el.src.includes('static/main'); });
-    if (script)
-      patchJs(script.src);
+  document.addEventListener('DOMContentLoaded', function() {
+    cleanPaywallTracking();
+    document.body.addEventListener('click', cleanPaywallTracking, true);
   });
 
   window.onload = function() {
     function check(){
-      if(document.getElementsByClassName('wrapper-paid-content')[0]){
-        document.getElementsByClassName('wrapper-paid-content')[0].innerHTML = '<p>Por favor aperte Ctrl-F5 para carregar o restante da notícia!</p>';
+      if(
+        document.getElementsByClassName('wrapper-paid-content')[0] &&
+        !document.getElementsByClassName('wrapper-paid-content')[0].innerHTML.includes('Burlesco')
+      ) {
+        document.getElementsByClassName('wrapper-paid-content')[0].innerHTML = '<p>Burlesco: Por favor aperte Ctrl-F5 para carregar o restante da notícia!</p>' + document.getElementsByClassName('wrapper-paid-content')[0].innerHTML;
       }
       setTimeout(function(){ check(); }, 1000);
     }
