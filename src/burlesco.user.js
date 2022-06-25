@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Burlesco
 // @namespace    https://burles.co/
-// @version      12.3
+// @version      12.4
 // @description  Leia notícias sem ser assinante, burle o paywall
 // @author       rodorgas & AugustoResende
 // @supportURL   https://burles.co
@@ -97,6 +97,7 @@
 // @webRequestItem {"selector":"*://prisa-el-pais-prod.cdn.arcpublishing.com/arc/subs/p.js","action":"cancel"}
 // @webRequestItem {"selector":"*://brasil.elpais.com/pf/resources/dist/js/article.js*","action":"cancel"}
 // @webRequestItem {"selector":"*://gauchazh.clicrbs.com.br/static/signwall.*.min.js","action":"cancel"}
+// @webRequestItem {"selector":"*://gauchazh.clicrbs.com.br/static/main*","action":"cancel"}
 // @run-at       document-start
 // @noframes
 // ==/UserScript==
@@ -107,7 +108,7 @@ if (/gauchazh\.clicrbs\.com\.br/.test(document.location.host)) {
     function patchJs(jsurl) {
       GM_xmlhttpRequest({
         method: 'GET',
-        url: jsurl.replace('com.br', '.com.br.'),
+        url: jsurl.replace('com.br', 'com.br.'),
         onload: function(response) {
           var injectme = response.responseText;
           injectme = injectme.replace(
