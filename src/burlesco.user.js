@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Burlesco
 // @namespace    https://burles.co/
-// @version      12.0
+// @version      12.3
 // @description  Leia notícias sem ser assinante, burle o paywall
 // @author       rodorgas & AugustoResende
 // @supportURL   https://burles.co
@@ -10,6 +10,7 @@
 // @grant        GM_webRequest
 // @grant        GM_xmlhttpRequest
 // @connect      gauchazh.clicrbs.com.br
+// @connect      gauchazh.clicrbs.com.br.
 // @connect      static.infoglobo.com.br
 // @connect      cdn.tinypass.com
 // @connect      observador.pt
@@ -81,7 +82,6 @@
 // @webRequestItem {"selector":"*://cdn.tinypass.com/api/tinypass.min.js","action":"cancel"}
 // @webRequestItem {"selector":"*://api.tinypass.com/*","action":"cancel"}
 // @webRequestItem {"selector":"*://tm.jsuol.com.br/modules/content-gate.js","action":"cancel"}
-// @webRequestItem {"selector":"*://gauchazh.clicrbs.com.br/static/main*","action":"cancel"}
 // @webRequestItem {"selector":"https://paywall.nsctotal.com.br/behaviors","action":"cancel"}
 // @webRequestItem {"selector":"*://*.estadao.com.br/paywall/*","action":"cancel"}
 // @webRequestItem {"selector":"*://www.folhadelondrina.com.br/login.php*","action":"cancel"}
@@ -107,7 +107,7 @@ if (/gauchazh\.clicrbs\.com\.br/.test(document.location.host)) {
     function patchJs(jsurl) {
       GM_xmlhttpRequest({
         method: 'GET',
-        url: jsurl,
+        url: jsurl.replace('com.br', '.com.br.'),
         onload: function(response) {
           var injectme = response.responseText;
           injectme = injectme.replace(
@@ -138,6 +138,16 @@ if (/gauchazh\.clicrbs\.com\.br/.test(document.location.host)) {
     }
     check();
   };
+
+  const cleanPaywallTracking = () => {
+    document.cookie = 'pwsi__zh=;domain=.clicrbs.com.br;path=/;expires=Thu, 01 Jan 1970 00:00:01 GMT';
+    localStorage.removeItem('pwsi__zh');
+    sessionStorage.removeItem('pwsi__zh');
+  };
+  cleanPaywallTracking();
+  setTimeout(cleanPaywallTracking, 5000);
+  document.body.addEventListener('click', cleanPaywallTracking, true);
+
 }
 
 
