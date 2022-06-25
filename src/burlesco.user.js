@@ -34,7 +34,6 @@
 // @match        *://*.nytimes.com/*
 // @match        *://*.nyt.com/*
 // @match        *://*.oglobo.globo.com/*
-// @match        *://www.rbsonline.com.br/*
 // @match        *://api.tinypass.com/*
 // @match        *://cdn.tinypass.com/*
 // @match        *://dashboard.tinypass.com/*
@@ -77,14 +76,12 @@
 // @webRequestItem {"selector":"*://correio.rac.com.br/includes/js/novo_cp/fivewall.js*","action":"cancel"}
 // @webRequestItem {"selector":"*://dashboard.tinypass.com/xbuilder/experience/load*","action":"cancel"}
 // @webRequestItem {"selector":"*://*.fivewall.com.br/*","action":"cancel"}
-// @webRequestItem {"selector":"*://www.rbsonline.com.br/cdn/scripts/SLoader.js","action":"cancel"}
 // @webRequestItem {"selector":"*://*.nytimes.com/js/mtr.js","action":"cancel"}
 // @webRequestItem {"selector":"*://*.washingtonpost.com/wp-stat/pwapi/*","action":"cancel"}
 // @webRequestItem {"selector":"*://cdn.tinypass.com/api/tinypass.min.js","action":"cancel"}
 // @webRequestItem {"selector":"*://api.tinypass.com/*","action":"cancel"}
 // @webRequestItem {"selector":"*://tm.jsuol.com.br/modules/content-gate.js","action":"cancel"}
 // @webRequestItem {"selector":"*://gauchazh.clicrbs.com.br/static/main*","action":"cancel"}
-// @webRequestItem {"selector":"*://www.rbsonline.com.br/cdn/scripts/special-paywall.min.js*","action":"cancel"}
 // @webRequestItem {"selector":"https://paywall.nsctotal.com.br/behaviors","action":"cancel"}
 // @webRequestItem {"selector":"*://*.estadao.com.br/paywall/*","action":"cancel"}
 // @webRequestItem {"selector":"*://www.folhadelondrina.com.br/login.php*","action":"cancel"}
@@ -99,6 +96,7 @@
 // @webRequestItem {"selector":"*://prisa-el-pais-brasil-prod.cdn.arcpublishing.com/arc/subs/p.js","action":"cancel"}
 // @webRequestItem {"selector":"*://prisa-el-pais-prod.cdn.arcpublishing.com/arc/subs/p.js","action":"cancel"}
 // @webRequestItem {"selector":"*://brasil.elpais.com/pf/resources/dist/js/article.js*","action":"cancel"}
+// @webRequestItem {"selector":"*://gauchazh.clicrbs.com.br/static/signwall.*.min.js","action":"cancel"}
 // @run-at       document-start
 // @noframes
 // ==/UserScript==
@@ -112,9 +110,6 @@ if (/gauchazh\.clicrbs\.com\.br/.test(document.location.host)) {
         url: jsurl,
         onload: function(response) {
           var injectme = response.responseText;
-          injectme = injectme.replace(/[a-z].showLoginPaywall,/g, 'false,');
-          injectme = injectme.replace(/[a-z].showPaywall,/g, 'false,');
-          injectme = injectme.replace(/[a-z].requestCPF\|\|!1,/g, 'false,');
           injectme = injectme.replace(
             /![a-z].showLoginPaywall&&![a-z].showPaywall\|\|!1/g, 'true');
           injectme = injectme.replace('throw new Error("only one instance of babel-polyfill is allowed");', '');
@@ -127,10 +122,11 @@ if (/gauchazh\.clicrbs\.com\.br/.test(document.location.host)) {
       });
     }
 
-    var scripts = Array.from(document.getElementsByTagName('script'));
-    var script = scripts.find((el) => { return el.src.includes('static/main'); });
-    if (script)
+    const scripts = Array.from(document.getElementsByTagName('script'));
+    const script = scripts.find((el) => { return el.src.includes('static/main'); });
+    if (script) {
       patchJs(script.src);
+    }
   });
 
   window.onload = function() {
@@ -138,7 +134,7 @@ if (/gauchazh\.clicrbs\.com\.br/.test(document.location.host)) {
       if(document.getElementsByClassName('wrapper-paid-content')[0]){
         document.getElementsByClassName('wrapper-paid-content')[0].innerHTML = '<p>Por favor aperte Ctrl-F5 para carregar o restante da notícia!</p>';
       }
-      setTimeout(function(){ check(); }, 1000);
+      setTimeout(function(){ check(); }, 5000);
     }
     check();
   };
