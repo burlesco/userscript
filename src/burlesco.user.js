@@ -9,6 +9,7 @@
 // Atenção:      Caso algum site não funcione logo após a instalação, limpe o cache do navegador.
 // @grant        GM_webRequest
 // @grant        GM_xmlhttpRequest
+// @connect      gauchazh.clicrbs.com.br
 // @connect      static.infoglobo.com.br
 // @connect      cdn.tinypass.com
 // @connect      observador.pt
@@ -80,6 +81,7 @@
 // @webRequestItem {"selector":"*://cdn.tinypass.com/api/tinypass.min.js","action":"cancel"}
 // @webRequestItem {"selector":"*://api.tinypass.com/*","action":"cancel"}
 // @webRequestItem {"selector":"*://tm.jsuol.com.br/modules/content-gate.js","action":"cancel"}
+// @webRequestItem {"selector":"*://gauchazh.clicrbs.com.br/static/main*","action":"cancel"}
 // @webRequestItem {"selector":"https://paywall.nsctotal.com.br/behaviors","action":"cancel"}
 // @webRequestItem {"selector":"*://*.estadao.com.br/paywall/*","action":"cancel"}
 // @webRequestItem {"selector":"*://www.folhadelondrina.com.br/login.php*","action":"cancel"}
@@ -94,32 +96,45 @@
 // @webRequestItem {"selector":"*://prisa-el-pais-brasil-prod.cdn.arcpublishing.com/arc/subs/p.js","action":"cancel"}
 // @webRequestItem {"selector":"*://prisa-el-pais-prod.cdn.arcpublishing.com/arc/subs/p.js","action":"cancel"}
 // @webRequestItem {"selector":"*://brasil.elpais.com/pf/resources/dist/js/article.js*","action":"cancel"}
+// @webRequestItem {"selector":"*://gauchazh.clicrbs.com.br/static/signwall.*.min.js","action":"cancel"}
 // @run-at       document-start
 // @noframes
 // ==/UserScript==
 
 // run_at: document_start
 if (/gauchazh\.clicrbs\.com\.br/.test(document.location.host)) {
-  const cleanPaywallTracking = () => {
-    document.cookie = 'pwsi__zh=;domain=.clicrbs.com.br;path=/;expires=Thu, 01 Jan 1970 00:00:01 GMT';
-    localStorage.removeItem('pwsi__zh');
-    sessionStorage.removeItem('pwsi__zh');
-  }
-
   document.addEventListener('DOMContentLoaded', function() {
-    cleanPaywallTracking();
-    document.body.addEventListener('click', cleanPaywallTracking, true);
+    function patchJs(jsurl) {
+      GM_xmlhttpRequest({
+        method: 'GET',
+        url: jsurl,
+        onload: function(response) {
+          var injectme = response.responseText;
+          injectme = injectme.replace(
+            /![a-z].showLoginPaywall&&![a-z].showPaywall\|\|!1/g, 'true');
+          injectme = injectme.replace('throw new Error("only one instance of babel-polyfill is allowed");', '');
+          var script = document.createElement('script');
+          script.type = 'text/javascript';
+          var textNode = document.createTextNode(injectme);
+          script.appendChild(textNode);
+          document.head.appendChild(script);
+        }
+      });
+    }
+
+    const scripts = Array.from(document.getElementsByTagName('script'));
+    const script = scripts.find((el) => { return el.src.includes('static/main'); });
+    if (script) {
+      patchJs(script.src);
+    }
   });
 
   window.onload = function() {
     function check(){
-      if(
-        document.getElementsByClassName('wrapper-paid-content')[0] &&
-        !document.getElementsByClassName('wrapper-paid-content')[0].innerHTML.includes('Burlesco')
-      ) {
-        document.getElementsByClassName('wrapper-paid-content')[0].innerHTML = '<p>Burlesco: Por favor aperte Ctrl-F5 para carregar o restante da notícia!</p>' + document.getElementsByClassName('wrapper-paid-content')[0].innerHTML;
+      if(document.getElementsByClassName('wrapper-paid-content')[0]){
+        document.getElementsByClassName('wrapper-paid-content')[0].innerHTML = '<p>Por favor aperte Ctrl-F5 para carregar o restante da notícia!</p>';
       }
-      setTimeout(function(){ check(); }, 1000);
+      setTimeout(function(){ check(); }, 5000);
     }
     check();
   };
