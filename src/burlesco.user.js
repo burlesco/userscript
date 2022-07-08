@@ -185,9 +185,9 @@ else if (/crusoe\.com\.br/.test(document.location.host)) {
 
 else if (/correiodopovo\.com\.br/.test(document.location.host)) {
   const cleanPaywall = () => {
-    const div = document.querySelector("[id^='pwm'] > div");
-    const iframe = document.querySelector("[id^='pwm'] > iframe");
-    document.querySelector("body").style.overflow = 'initial';
+    const div = document.querySelector('[id^="pwm"] > div');
+    const iframe = document.querySelector('[id^="pwm"] > iframe');
+    document.querySelector('body').style.overflow = 'initial';
     iframe?.parentNode.removeChild(iframe);
     div?.parentNode.removeChild(div);
   };
