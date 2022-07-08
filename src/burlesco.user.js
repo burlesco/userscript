@@ -183,15 +183,16 @@ else if (/crusoe\.com\.br/.test(document.location.host)) {
   document.cookie = 'crs_subscriber=1';
 }
 
-else if (/correiodopovo\.com\.br/.test(document.location.host))   {
-  const clearCP = () => {
-    const elem1 = document.querySelector("[id^='pwm'] > div");
-    const elem2 = document.querySelector("[id^='pwm'] > iframe");
+else if (/correiodopovo\.com\.br/.test(document.location.host)) {
+  const cleanPaywall = () => {
+    const div = document.querySelector("[id^='pwm'] > div");
+    const iframe = document.querySelector("[id^='pwm'] > iframe");
     document.querySelector("body").style.overflow = 'initial';
-    elem2.parentNode.removeChild(elem2);
-    elem1.parentNode.removeChild(elem1);
+    iframe?.parentNode.removeChild(iframe);
+    div?.parentNode.removeChild(div);
   };
-  setTimeout(clearCP, 4000);
+  setTimeout(cleanPaywall, 4000);
+  cleanPaywall();
 }
 
 // run_at: document_idle
