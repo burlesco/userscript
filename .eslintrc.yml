@@ -1,8 +1,9 @@
 env:
   browser: true
-  es6: true
   webextensions: true
   greasemonkey: true
+parserOptions:
+  ecmaVersion: 2020
 extends: 'eslint:recommended'
 rules:
   indent:
