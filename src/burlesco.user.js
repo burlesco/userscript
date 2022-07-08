@@ -68,6 +68,7 @@
 // @match        *://*.diariodecanoas.com.br/*
 // @match        *://*.observador.pt/*
 // @match        *://*.elpais.com/*
+// @match        *://*.correiodopovo.com.br/*
 // @webRequestItem {"selector":"*://correio-static.cworks.cloud/vendor/bower_components/paywall.js/paywall.js*","action":"cancel"}
 // @webRequestItem {"selector":{"include":"*://paywall.folha.uol.com.br/*","exclude":"*://paywall.folha.uol.com.br/status.php"} ,"action":"cancel"}
 // @webRequestItem {"selector":"*://static.folha.uol.com.br/paywall/*","action":"cancel"}
@@ -180,6 +181,18 @@ else if (/jota\.info/.test(document.location.host)) {
 
 else if (/crusoe\.com\.br/.test(document.location.host)) {
   document.cookie = 'crs_subscriber=1';
+}
+
+else if (/correiodopovo\.com\.br/.test(document.location.host)) {
+  const cleanPaywall = () => {
+    const div = document.querySelector("[id^='pwm'] > div");
+    const iframe = document.querySelector("[id^='pwm'] > iframe");
+    document.querySelector("body").style.overflow = 'initial';
+    iframe?.parentNode.removeChild(iframe);
+    div?.parentNode.removeChild(div);
+  };
+  setTimeout(cleanPaywall, 4000);
+  cleanPaywall();
 }
 
 // run_at: document_idle
