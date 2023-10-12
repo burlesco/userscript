@@ -63,6 +63,7 @@
 // @match        *://crusoe.com.br/*
 // @match        *://*.em.com.br/*
 // @match        *://*.forbes.pl/*
+// @match        *://*.forbes.com/*
 // @match        *://*.newsweek.pl/*
 // @match        *://*.seudinheiro.com/*
 // @match        *://*.diariodecanoas.com.br/*
@@ -99,6 +100,7 @@
 // @webRequestItem {"selector":"*://brasil.elpais.com/pf/resources/dist/js/article.js*","action":"cancel"}
 // @webRequestItem {"selector":"*://gauchazh.clicrbs.com.br/static/signwall.*.min.js","action":"cancel"}
 // @webRequestItem {"selector":"*://gauchazh.clicrbs.com.br/static/main*","action":"cancel"}
+// @webRequestItem {"selector":"*://i.forbesimg.com/simple-site/dist/js/desktopArticle-*.js","action":"cancel"}
 // @run-at       document-start
 // @noframes
 // ==/UserScript==
@@ -416,7 +418,14 @@ document.addEventListener('DOMContentLoaded', function() {
       contentPremium.classList.remove('contentPremium');
     }
   }
-
+  
+  else if (/forbes\.com/.test(document.location.host)) {
+    document.querySelector('.paywall_ribbon').remove();
+    document.querySelector('.pay-wall-content').classList.remove('.pay-wall-content');
+    localStorage.clear();
+    eraseAllCookies();
+  }
+  
   else if (/seudinheiro\.com/.test(document.location.host)) {
     document.querySelector('#premium-paywall').remove();
     document.body.style.overflow = '';
