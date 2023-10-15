@@ -438,7 +438,6 @@ document.addEventListener('DOMContentLoaded', function() {
       div?.parentNode.removeChild(div);
     };
     cleanGalileu();
-    // Pra matar bem morto
     setTimeout(cleanGalileu, 4000);
   }
 
