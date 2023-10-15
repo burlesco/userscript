@@ -69,6 +69,7 @@
 // @match        *://*.observador.pt/*
 // @match        *://*.elpais.com/*
 // @match        *://*.correiodopovo.com.br/*
+// @match        *://*.revistagalileu.globo.com/*
 // @webRequestItem {"selector":"*://correio-static.cworks.cloud/vendor/bower_components/paywall.js/paywall.js*","action":"cancel"}
 // @webRequestItem {"selector":{"include":"*://paywall.folha.uol.com.br/*","exclude":"*://paywall.folha.uol.com.br/status.php"} ,"action":"cancel"}
 // @webRequestItem {"selector":"*://static.folha.uol.com.br/paywall/*","action":"cancel"}
@@ -428,6 +429,16 @@ document.addEventListener('DOMContentLoaded', function() {
       document.querySelector('.article-body-wrapper').style.maxHeight = 'inherit';
       document.querySelector('.premium-article').classList.add('article-shown');
     }, 5000);
+  }
+
+  else if (/revistagalileu\.globo\.com/.test(document.location.host)) {
+    const cleanGalileu = () => {
+      const div = document.querySelector('#detecta-adblock');
+      document.querySelector('body').style.overflow = 'initial';
+      div?.parentNode.removeChild(div);
+    };
+    cleanGalileu();
+    setTimeout(cleanGalileu, 4000);
   }
 
   if (code !== null) {
