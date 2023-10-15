@@ -70,6 +70,7 @@
 // @match        *://*.elpais.com/*
 // @match        *://*.correiodopovo.com.br/*
 // @match        *://*.technologyreview.com/*
+// @match        *://*.revistagalileu.globo.com/*
 // @webRequestItem {"selector":"*://correio-static.cworks.cloud/vendor/bower_components/paywall.js/paywall.js*","action":"cancel"}
 // @webRequestItem {"selector":{"include":"*://paywall.folha.uol.com.br/*","exclude":"*://paywall.folha.uol.com.br/status.php"} ,"action":"cancel"}
 // @webRequestItem {"selector":"*://static.folha.uol.com.br/paywall/*","action":"cancel"}
@@ -85,7 +86,6 @@
 // @webRequestItem {"selector":"*://api.tinypass.com/*","action":"cancel"}
 // @webRequestItem {"selector":"*://tm.jsuol.com.br/modules/content-gate.js","action":"cancel"}
 // @webRequestItem {"selector":"https://paywall.nsctotal.com.br/behaviors","action":"cancel"}
-// @webRequestItem {"selector":"*://*.estadao.com.br/paywall/*","action":"cancel"}
 // @webRequestItem {"selector":"*://www.folhadelondrina.com.br/login.php*","action":"cancel"}
 // @webRequestItem {"selector":"https://www.eltiempo.com/js/desktopArticle.js*","action":"cancel"}
 // @webRequestItem {"selector":"*://*.haaretz.co.il/*/inter.js","action":"cancel"}
@@ -100,6 +100,7 @@
 // @webRequestItem {"selector":"*://brasil.elpais.com/pf/resources/dist/js/article.js*","action":"cancel"}
 // @webRequestItem {"selector":"*://gauchazh.clicrbs.com.br/static/signwall.*.min.js","action":"cancel"}
 // @webRequestItem {"selector":"*://gauchazh.clicrbs.com.br/static/main*","action":"cancel"}
+// @webRequestItem {"selector":"*://*.zephr.com/zephr-browser/*/zephr-browser.umd.js","action":"cancel"}
 // @run-at       document-start
 // @noframes
 // ==/UserScript==
@@ -439,6 +440,16 @@ document.addEventListener('DOMContentLoaded', function() {
     eraseCookie('__tbc');
     eraseCookie('__pvi');
     eraseCookie('_pctx');
+  }
+
+  else if (/revistagalileu\.globo\.com/.test(document.location.host)) {
+    const cleanGalileu = () => {
+      const div = document.querySelector('#detecta-adblock');
+      document.querySelector('body').style.overflow = 'initial';
+      div?.parentNode.removeChild(div);
+    };
+    cleanGalileu();
+    setTimeout(cleanGalileu, 4000);
   }
 
   if (code !== null) {
