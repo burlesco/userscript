@@ -63,6 +63,7 @@
 // @match        *://crusoe.com.br/*
 // @match        *://*.em.com.br/*
 // @match        *://*.forbes.pl/*
+// @match        *://*.forbes.com/*
 // @match        *://*.newsweek.pl/*
 // @match        *://*.seudinheiro.com/*
 // @match        *://*.diariodecanoas.com.br/*
@@ -417,7 +418,15 @@ document.addEventListener('DOMContentLoaded', function() {
       contentPremium.classList.remove('contentPremium');
     }
   }
-
+  
+  else if (/forbes\.com/.test(document.location.host)) {
+    setInterval(() => {
+      document.querySelector('.zephr-modal-open')?.classList.remove('zephr-modal-open');
+      document.querySelector('.zephr-backdrop')?.remove()
+      document.querySelector('.zephr-generic-modal')?.remove()
+    }, 2000);
+  }
+  
   else if (/seudinheiro\.com/.test(document.location.host)) {
     document.querySelector('#premium-paywall').remove();
     document.body.style.overflow = '';
