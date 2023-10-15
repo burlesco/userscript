@@ -100,7 +100,6 @@
 // @webRequestItem {"selector":"*://brasil.elpais.com/pf/resources/dist/js/article.js*","action":"cancel"}
 // @webRequestItem {"selector":"*://gauchazh.clicrbs.com.br/static/signwall.*.min.js","action":"cancel"}
 // @webRequestItem {"selector":"*://gauchazh.clicrbs.com.br/static/main*","action":"cancel"}
-// @webRequestItem {"selector":"*://i.forbesimg.com/simple-site/dist/js/desktopArticle-*.js","action":"cancel"}
 // @run-at       document-start
 // @noframes
 // ==/UserScript==
@@ -420,10 +419,11 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   else if (/forbes\.com/.test(document.location.host)) {
-    document.querySelector('.paywall_ribbon').remove();
-    document.querySelector('.pay-wall-content').classList.remove('.pay-wall-content');
-    localStorage.clear();
-    eraseAllCookies();
+    setInterval(() => {
+      document.querySelector('.zephr-modal-open')?.classList.remove('zephr-modal-open');
+      document.querySelector('.zephr-backdrop')?.remove()
+      document.querySelector('.zephr-generic-modal')?.remove()
+    }, 2000);
   }
   
   else if (/seudinheiro\.com/.test(document.location.host)) {
