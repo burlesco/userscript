@@ -69,6 +69,7 @@
 // @match        *://*.observador.pt/*
 // @match        *://*.elpais.com/*
 // @match        *://*.correiodopovo.com.br/*
+// @match        *://*.technologyreview.com/*
 // @match        *://*.revistagalileu.globo.com/*
 // @webRequestItem {"selector":"*://correio-static.cworks.cloud/vendor/bower_components/paywall.js/paywall.js*","action":"cancel"}
 // @webRequestItem {"selector":{"include":"*://paywall.folha.uol.com.br/*","exclude":"*://paywall.folha.uol.com.br/status.php"} ,"action":"cancel"}
@@ -152,7 +153,6 @@ if (/gauchazh\.clicrbs\.com\.br/.test(document.location.host)) {
   document.body.addEventListener('click', cleanPaywallTracking, true);
 
 }
-
 
 else if (/jota\.info/.test(document.location.host)) {
   var page_url = window.location.href;
@@ -429,6 +429,17 @@ document.addEventListener('DOMContentLoaded', function() {
       document.querySelector('.article-body-wrapper').style.maxHeight = 'inherit';
       document.querySelector('.premium-article').classList.add('article-shown');
     }, 5000);
+  }
+  
+  else if (/technologyreview\.com/.test(document.location.host)) {
+    document.querySelector('#template-container').remove();
+    localStorage.clear();
+    eraseCookie('xbc');
+    eraseCookie('_pcid');
+    eraseCookie('_pcus');
+    eraseCookie('__tbc');
+    eraseCookie('__pvi');
+    eraseCookie('_pctx');
   }
 
   else if (/revistagalileu\.globo\.com/.test(document.location.host)) {
