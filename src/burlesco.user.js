@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Burlesco
 // @namespace    https://burles.co/
-// @version      12.4
+// @version      13.0
 // @description  Leia notícias sem ser assinante, burle o paywall
 // @author       rodorgas & AugustoResende
 // @supportURL   https://burles.co
@@ -100,62 +100,13 @@
 // @webRequestItem {"selector":"*://prisa-el-pais-prod.cdn.arcpublishing.com/arc/subs/p.js","action":"cancel"}
 // @webRequestItem {"selector":"*://brasil.elpais.com/pf/resources/dist/js/article.js*","action":"cancel"}
 // @webRequestItem {"selector":"*://gauchazh.clicrbs.com.br/static/signwall.*.min.js","action":"cancel"}
-// @webRequestItem {"selector":"*://gauchazh.clicrbs.com.br/static/main*","action":"cancel"}
 // @webRequestItem {"selector":"*://*.zephr.com/zephr-browser/*/zephr-browser.umd.js","action":"cancel"}
 // @run-at       document-start
 // @noframes
 // ==/UserScript==
 
 // run_at: document_start
-if (/gauchazh\.clicrbs\.com\.br/.test(document.location.host)) {
-  document.addEventListener('DOMContentLoaded', function() {
-    function patchJs(jsurl) {
-      GM_xmlhttpRequest({
-        method: 'GET',
-        url: jsurl.replace('com.br', 'com.br.'),
-        onload: function(response) {
-          var injectme = response.responseText;
-          injectme = injectme.replace(
-            /![a-z].showLoginPaywall&&![a-z].showPaywall\|\|!1/g, 'true');
-          injectme = injectme.replace('throw new Error("only one instance of babel-polyfill is allowed");', '');
-          var script = document.createElement('script');
-          script.type = 'text/javascript';
-          var textNode = document.createTextNode(injectme);
-          script.appendChild(textNode);
-          document.head.appendChild(script);
-        }
-      });
-    }
-
-    const scripts = Array.from(document.getElementsByTagName('script'));
-    const script = scripts.find((el) => { return el.src.includes('static/main'); });
-    if (script) {
-      patchJs(script.src);
-    }
-  });
-
-  window.onload = function() {
-    function check(){
-      if(document.getElementsByClassName('wrapper-paid-content')[0]){
-        document.getElementsByClassName('wrapper-paid-content')[0].innerHTML = '<p>Por favor aperte Ctrl-F5 para carregar o restante da notícia!</p>';
-      }
-      setTimeout(function(){ check(); }, 5000);
-    }
-    check();
-  };
-
-  const cleanPaywallTracking = () => {
-    document.cookie = 'pwsi__zh=;domain=.clicrbs.com.br;path=/;expires=Thu, 01 Jan 1970 00:00:01 GMT';
-    localStorage.removeItem('pwsi__zh');
-    sessionStorage.removeItem('pwsi__zh');
-  };
-  cleanPaywallTracking();
-  setTimeout(cleanPaywallTracking, 5000);
-  document.body.addEventListener('click', cleanPaywallTracking, true);
-
-}
-
-else if (/jota\.info/.test(document.location.host)) {
+if (/jota\.info/.test(document.location.host)) {
   var page_url = window.location.href;
   if (page_url.search('paywall') >= 0) { // Só ativa em urls com paywall
     var new_page_url = window.location.href.replace('www.jota.info/paywall?redirect_to=//', '');
@@ -200,6 +151,44 @@ else if (/correiodopovo\.com\.br/.test(document.location.host)) {
 // run_at: document_idle
 document.addEventListener('DOMContentLoaded', function() {
   var code = null;
+
+  if (/gauchazh\.clicrbs\.com\.br/.test(document.location.host)) {
+    code = `
+        (async () => {
+          const data = JSON.parse(decodeURI(window.__ISOMORPHIC_DATA__)).state.apollo.ROOT_QUERY
+          const key = Object.keys(data).filter(key => key.includes('article'))[0]
+
+          const parts = data[key].article_body_components
+            .map(item => \`<div class="article-paragraph">\${item.html || item.data.embed}</div>\`)
+          const content = parts.reduce((acc, curr) => acc + curr)
+
+          while (true) {
+            const article = document.querySelector('.article-paragraph')
+            if (article === null) {
+               await new Promise(r => setTimeout(r, 1000));
+               continue
+            }
+
+            article.insertAdjacentHTML('afterend', content)
+            document.querySelectorAll('.article-paragraph').forEach(item => {
+              item.style.opacity = '1';
+            })
+            document.querySelectorAll('a').forEach(item => {
+              item.addEventListener('click', (e) => {
+                e.stopImmediatePropagation()
+                return false;
+              })
+            })
+
+            var style = document.createElement('style');
+            style.textContent = '.paid-content-template::before { display: none; }';
+            (document.head||document.documentElement).appendChild(script);
+
+            break;
+         }
+       })()
+      `;
+  }
 
   if (/www\.economist\.com/.test(document.location.host)) {
     code = 'document.cookie = "ec_limit=allow";';
@@ -422,8 +411,8 @@ document.addEventListener('DOMContentLoaded', function() {
   else if (/forbes\.com/.test(document.location.host)) {
     setInterval(() => {
       document.querySelector('.zephr-modal-open')?.classList.remove('zephr-modal-open');
-      document.querySelector('.zephr-backdrop')?.remove()
-      document.querySelector('.zephr-generic-modal')?.remove()
+      document.querySelector('.zephr-backdrop')?.remove();
+      document.querySelector('.zephr-generic-modal')?.remove();
     }, 2000);
   }
   
