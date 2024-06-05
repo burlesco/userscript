@@ -94,7 +94,7 @@
 // @webRequestItem {"selector":"*://*.diarinho.com.br/wp-admin/admin-ajax.php","action":"cancel"}
 // @webRequestItem {"selector":"*://diarinho.com.br/wp-admin/admin-ajax.php","action":"cancel"}
 // @webRequestItem {"selector":"*://static.infoglobo.com.br/paywall/js/tiny.js","action":"cancel"}
-// @webRequestItem {"selector":"*://*.abril.com.br/wp-content/plugins/abril-plugins/abril-paywall/js/paywall.js*","action":"cancel"}
+// @webRequestItem {"selector":"*://*.abril.com.br/wp-content/plugins/abril-plugins/abril-paywall/js/abril-firebase-auth/paywall.js*","action":"cancel"}
 // @webRequestItem {"selector":"*://exame.com/wp-content/themes/exame-new/js/pywll.js","action":"cancel"}
 // @webRequestItem {"selector":"*://prisa-el-pais-brasil-prod.cdn.arcpublishing.com/arc/subs/p.js","action":"cancel"}
 // @webRequestItem {"selector":"*://prisa-el-pais-prod.cdn.arcpublishing.com/arc/subs/p.js","action":"cancel"}
@@ -264,6 +264,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelector('body').classList.remove('disabledByPaywall')
         document.querySelector('.piano-offer-overlay').remove()
         document.querySelector('#piano_offer').remove()
+        document.querySelector('.ads-footer').remove()
       }, 10000)
     `;
 
