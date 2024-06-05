@@ -208,7 +208,17 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   else if (/ft\.com/.test(document.location.host)
-    && document.querySelector('.barrier-banner')) {
+      && document.querySelector('.barrier-banner')) {
+
+    eraseAllCookies();
+
+    document.cookie = '';
+    localStorage.clear();
+    sessionStorage.clear();
+    indexedDB.deleteDatabase('next-flags');
+    indexedDB.deleteDatabase('next:ads');
+
+    document.querySelector('.o-cookie-message').remove();
 
     GM_xmlhttpRequest({
       method: 'GET',
@@ -218,8 +228,8 @@ document.addEventListener('DOMContentLoaded', function() {
       },
       anonymous: true,
       onload: function(response) {
-        let parser = new DOMParser();
-        let newDocument = parser.parseFromString(response.responseText,'text/html');
+        var parser = new DOMParser();
+        var newDocument = parser.parseFromString(response.responseText,'text/html');
         if (newDocument.getElementsByClassName('article__content')[0]) {
           document.open();
           document.write(newDocument.getElementsByTagName('html')[0].innerHTML);
@@ -227,16 +237,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       }
     });
-    
-    const cookies = ['FTConsent=false', 'FTCookieConsentGDPR=true'];
-    document.cookie = cookies[0];
-    document.cookie = cookies[1];
-    localStorage.clear();
-    sessionStorage.clear();
-    indexedDB.deleteDatabase('next-flags');
-    indexedDB.deleteDatabase('next:ads');
-    eraseAllCookiesExcept(cookies);
-    document.querySelector('.o-banner').remove();
   }
 
   else if (/foreignpolicy\.com/.test(document.location.host)) {
@@ -458,38 +458,48 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// Helper functions
-function eraseCookie (cookieName) {
-  try {
-    document.cookie = cookieName + '=;expires=Thu, 01 Jan 1970 00:00:00 UTC';
-  } catch (error) {
-    console.error(`Could not erase cookie ${cookieName}. Error:` + error.message);
-  }
-}
-
 function eraseAllCookies() {
-  let cookies = document.cookie.split(';');
-
-  for (let i = 0; i < cookies.length; i++) {
-    let cookie = cookies[i];
-    let eqPos = cookie.indexOf('=');
-    let cookieName = eqPos > -1 ? cookie.substring(0, eqPos) : cookie;
-    eraseCookie(cookieName);
+  var cookieList  = document.cookie.split (/;\s*/);
+  for (var J = cookieList.length - 1;   J >= 0;  --J) {
+    var cookieName = cookieList[J].replace (/\s*(\w+)=.+$/, '$1');
+    eraseCookie (cookieName);
   }
 }
 
-// receives an array of cookies names as argument
-function eraseAllCookiesExcept(cookieArray) {
-  let cookies = document.cookie.split(';');
+function eraseCookie (cookieName) {
+  // https://stackoverflow.com/a/28081337/1840019
+  //--- ONE-TIME INITS:
+  //--- Set possible domains. Omits some rare edge cases.?.
+  var domain      = document.domain;
+  var domain2     = document.domain.replace (/^www\./, '');
+  var domain3     = document.domain.replace (/^(\w+\.)+?(\w+\.\w+)$/, '$2');
 
-  for (let i = 0; i < cookies.length; i++) {
-    let cookie = cookies[i];
-    let eqPos = cookie.indexOf('=');
-    let cookieName = eqPos > -1 ? cookie.substring(0, eqPos) : cookie;
-    
-    if (!cookieArray.includes(cookieName)) {
-      eraseCookie(cookieName);
+  //--- Get possible paths for the current page:
+  var pathNodes   = location.pathname.split ('/').map ( function (pathWord) {
+    return '/' + pathWord;
+  } );
+  var cookPaths   = [''].concat (pathNodes.map ( function (pathNode) {
+    if (this.pathStr) {
+      this.pathStr += pathNode;
     }
-  }
+    else {
+      this.pathStr = '; path=';
+      return (this.pathStr + pathNode);
+    }
+    return (this.pathStr);
+  } ) );
+
+  // eslint-disable-next-line no-func-assign
+  ( eraseCookie = function (cookieName) {
+    //--- For each path, attempt to delete the cookie.
+    cookPaths.forEach ( function (pathStr) {
+      //--- To delete a cookie, set its expiration date to a past value.
+      var diagStr     = cookieName + '=' + pathStr + '; expires=Thu, 01-Jan-1970 00:00:01 GMT;';
+      document.cookie = diagStr;
+
+      document.cookie = cookieName + '=' + pathStr + '; domain=' + domain  + '; expires=Thu, 01-Jan-1970 00:00:01 GMT;';
+      document.cookie = cookieName + '=' + pathStr + '; domain=' + domain2 + '; expires=Thu, 01-Jan-1970 00:00:01 GMT;';
+      document.cookie = cookieName + '=' + pathStr + '; domain=' + domain3 + '; expires=Thu, 01-Jan-1970 00:00:01 GMT;';
+    } );
+  } ) (cookieName);
 }
-/* eslint max-len: "off" */
