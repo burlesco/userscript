@@ -1,5 +1,14 @@
 {
+  "type": "module",
+  "eslintConfig": {
+    "env": {
+      "browser": true,
+      "webextension": true,
+      "greasemonkey": true
+    }
+  },
   "dependencies": {
-    "eslint": "^8.19.0"
+    "@stylistic/eslint-plugin-js": "^2.1.0",
+    "eslint": "^9.4.0"
   }
 }
