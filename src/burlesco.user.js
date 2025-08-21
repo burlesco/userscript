@@ -250,11 +250,36 @@ document.addEventListener('DOMContentLoaded', function() {
 
   else if (/folha\.uol\.com\.br/.test(document.location.host)) {
     code = `
-      omtrClickUOL = function(){};function showText() {
-         $("#bt-read-more-content").next().show();
-         $("#bt-read-more-content").next().show().prev().remove();
-      }
-      setTimeout(showText, 100);
+      window.addEventListener('DOMContentLoaded', () => {
+        const originalFetch = window.fetch;
+          window.fetch = function(resource, init) {
+              // Verifica se a URL contém o endpoint do paywall JSON
+              if (typeof resource === 'string' && resource.includes('paywall.folha.uol.com.br/wall.json')) {
+                  console.log('[FolhaPaywall] Interceptando paywall.json');
+                  // Retorna uma resposta fake que zera o paywall
+                  const fakeResponse = new Response(JSON.stringify({ paywall: "off", status: "ok" }), {
+                      status: 200,
+                      headers: { 'Content-Type': 'application/json' }
+                  });
+                  return Promise.resolve(fakeResponse);
+              }
+              return originalFetch.apply(this, arguments);
+          };
+      });
+    `;
+  }
+
+  else if (/estadao\.com\.br/.test(document.location.host)) {
+    code = `
+      window.addEventListener('DOMContentLoaded', () => {
+        Object.defineProperty(window, 'pwz', {
+          configurable: true,
+          writable: false,
+          value: function () {
+            console.log('paywall bloqueado');
+          }
+        });
+      });
     `;
   }
 
