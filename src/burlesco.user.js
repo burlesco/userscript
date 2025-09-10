@@ -248,6 +248,19 @@ document.addEventListener('DOMContentLoaded', function() {
     `;
   }
 
+  else if (/oglobo\.globo\.com/.test(document.location.host)) {
+    code = `
+      window.addEventListener('DOMContentLoaded', () => {
+        const observer = new MutationObserver(() => {
+          document.querySelectorAll('.barreiraJornada').forEach(div => div.remove());
+          document.querySelectorAll('.mobiliarioFooter').forEach(div => div.remove());
+        });
+
+        observer.observe(document.body, { childList: true, subtree: true });
+      });
+    `;
+  }
+
   else if (/folha\.uol\.com\.br/.test(document.location.host)) {
     code = `
       window.addEventListener('DOMContentLoaded', () => {
