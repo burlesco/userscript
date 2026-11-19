@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Burlesco
 // @namespace    https://burles.co/
-// @version      14.1
+// @version      14.2
 // @description  Leia notícias sem ser assinante, burle o paywall
 // @author       rodorgas & AugustoResende
 // @supportURL   https://burles.co
@@ -150,6 +150,39 @@ else if (/correiodopovo\.com\.br/.test(document.location.host)) {
   cleanPaywall();
 }
 
+else if (/folha\.uol\.com\.br/.test(document.location.host)) {
+  // Injetado em document_start para o fetch já estar interceptado quando o
+  // wall.js pedir o wall.json.
+  injectPageCode(`
+    const originalFetch = window.fetch;
+    window.fetch = function(resource, init) {
+      const url = typeof resource === 'string' ? resource : (resource && resource.url) || String(resource);
+      if (url.includes('paywall.folha.uol.com.br/wall.json')) {
+        console.log('[FolhaPaywall] Interceptando paywall.json');
+        // Retorna uma resposta fake que zera o paywall
+        return Promise.resolve(new Response(JSON.stringify({ paywall: 'off', status: 'ok' }), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' }
+        }));
+      }
+      return originalFetch.apply(this, arguments);
+    };
+  `);
+}
+
+else if (/estadao\.com\.br/.test(document.location.host)) {
+  // Injetado em document_start, antes do pwz.js carregar.
+  injectPageCode(`
+    Object.defineProperty(window, 'pwz', {
+      configurable: true,
+      writable: false,
+      value: function () {
+        console.log('paywall bloqueado');
+      }
+    });
+  `);
+}
+
 // run_at: document_idle
 document.addEventListener('DOMContentLoaded', function() {
   var code = null;
@@ -247,41 +280,6 @@ document.addEventListener('DOMContentLoaded', function() {
       document.body.classList.remove("overlay-no-scroll");
       document.body.style.overflow = "visible";
       document.documentElement.classList.remove("overlay-no-scroll");
-    `;
-  }
-
-  else if (/folha\.uol\.com\.br/.test(document.location.host)) {
-    code = `
-      window.addEventListener('DOMContentLoaded', () => {
-        const originalFetch = window.fetch;
-          window.fetch = function(resource, init) {
-              // Verifica se a URL contém o endpoint do paywall JSON
-              if (typeof resource === 'string' && resource.includes('paywall.folha.uol.com.br/wall.json')) {
-                  console.log('[FolhaPaywall] Interceptando paywall.json');
-                  // Retorna uma resposta fake que zera o paywall
-                  const fakeResponse = new Response(JSON.stringify({ paywall: "off", status: "ok" }), {
-                      status: 200,
-                      headers: { 'Content-Type': 'application/json' }
-                  });
-                  return Promise.resolve(fakeResponse);
-              }
-              return originalFetch.apply(this, arguments);
-          };
-      });
-    `;
-  }
-
-  else if (/estadao\.com\.br/.test(document.location.host)) {
-    code = `
-      window.addEventListener('DOMContentLoaded', () => {
-        Object.defineProperty(window, 'pwz', {
-          configurable: true,
-          writable: false,
-          value: function () {
-            console.log('paywall bloqueado');
-          }
-        });
-      });
     `;
   }
 
@@ -478,12 +476,16 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   if (code !== null) {
-    var script = document.createElement('script');
-    script.textContent = code;
-    (document.head||document.documentElement).appendChild(script);
-    script.parentNode.removeChild(script);
+    injectPageCode(code);
   }
 });
+
+function injectPageCode(code) {
+  var script = document.createElement('script');
+  script.textContent = code;
+  (document.head||document.documentElement).appendChild(script);
+  script.parentNode.removeChild(script);
+}
 
 function eraseAllCookies() {
   var cookieList  = document.cookie.split (/;\s*/);
