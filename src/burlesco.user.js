@@ -1,10 +1,12 @@
 // ==UserScript==
 // @name         Burlesco
 // @namespace    https://burles.co/
-// @version      13.1
+// @version      14.1
 // @description  Leia notícias sem ser assinante, burle o paywall
 // @author       rodorgas & AugustoResende
 // @supportURL   https://burles.co
+// @updateURL    https://github.com/burlesco/userscript/releases/latest/download/burlesco.user.js
+// @downloadURL  https://github.com/burlesco/userscript/releases/latest/download/burlesco.user.js
 // @icon         https://raw.githubusercontent.com/burlesco/site/master/logo_semfundo.png
 // Atenção:      Caso algum site não funcione logo após a instalação, limpe o cache do navegador.
 // @grant        GM_webRequest
