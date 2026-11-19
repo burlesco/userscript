@@ -1,0 +1,30 @@
+name: Release
+
+on:
+  push:
+    branches: [master]
+    tags: ['v*']
+  pull_request:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: make lint
+      - run: make build
+      - name: Verifica cabeçalho do userscript
+        run: head -1 dist/burlesco.user.js | grep -qx '// ==UserScript=='
+      - name: Publica release
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" dist/burlesco.user.js --title "$GITHUB_REF_NAME" --generate-notes
