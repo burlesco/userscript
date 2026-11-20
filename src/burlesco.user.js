@@ -103,6 +103,7 @@
 // @webRequestItem {"selector":"*://brasil.elpais.com/pf/resources/dist/js/article.js*","action":"cancel"}
 // @webRequestItem {"selector":"*://gauchazh.clicrbs.com.br/static/signwall.*.min.js","action":"cancel"}
 // @webRequestItem {"selector":"*://*.zephr.com/zephr-browser/*/zephr-browser.umd.js","action":"cancel"}
+// @webRequestItem {"selector":"https://www.wired.com/verso/static/presenter-articles.*.js","action":"cancel"}
 // @run-at       document-start
 // @noframes
 // ==/UserScript==
@@ -347,22 +348,6 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   else if (/diariopopular\.com\.br/.test(document.location.host)) {
-    eraseAllCookies();
-  }
-
-  else if (/wired\.com/.test(document.location.host)) {
-    code = `
-      window.onload = function() {
-        style = document.createElement('style');
-        style.type = 'text/css';
-        css='.paywall-container-component {display: none !important}';
-        style.appendChild(document.createTextNode(css));
-        document.head.appendChild(style);
-      }
-      document.cookie = "";
-      localStorage.clear();
-      sessionStorage.clear();
-    `;
     eraseAllCookies();
   }
 
